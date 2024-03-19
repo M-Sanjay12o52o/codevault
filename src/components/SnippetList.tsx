@@ -76,7 +76,7 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
 
     }
 
-    const handleDelete = async (id: number) => {
+    const handleDelete = async (id: string) => {
         try {
             const response = await fetch("/api/delete", {
                 method: 'DELETE',
