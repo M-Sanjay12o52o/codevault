@@ -7,6 +7,7 @@ export async function POST(req: Request, res: Response) {
     const { sourceCode, stdin } = (await req.json());
 
     console.log("sourceCode postcode: ", sourceCode)
+    console.log("stdin: ", stdin)
 
     try {
         const sanitizedReq = {

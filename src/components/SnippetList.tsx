@@ -1,10 +1,10 @@
 "use client"
 
-import { stdin } from 'process';
 import { ButtonHTMLAttributes, FC, MouseEventHandler, useState } from 'react'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { ArrowLeft, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
     const [token, setToken] = useState("")
@@ -76,8 +76,19 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
 
     }
 
+    const comment = async () => {
+        const { data } = await axios.post('/api/comment', {
+            text: 'hello',
+            tags: ['TypeScript']
+        })
+
+        console.log(data)
+    }
+
+
     const handleDelete = async (id: string) => {
         try {
+            setIsLoading(true)
             const response = await fetch("/api/delete", {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
@@ -103,17 +114,24 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
         <div className='mt-4'>
             <ArrowLeft className='m-4 cursor-pointer' onClick={() => router.push("/")} />
             {token && <p>{token}</p>}
-            {message && <p>{message}</p>}
             <header className="flex justify-center items-center mb-6">
                 <h1 className="text-3xl font-bold text-center text-blue-500">Submitted</h1>
             </header>
             <ul className='snippet-list'>
+                {!isLoading && snippets.length === 0 && <h1 className="text-center text-gray-500 font-medium">
+                    No snippets found
+                </h1>}
                 {snippets.length !== 0 && snippets.map((snippet) => (
-                    <li key={snippet.username + snippet.sourceCode}>
+                    <li key={snippet.id}>
                         <Card className='mx-96 my-8'>
+                            <p>{snippet.id}</p>
                             <div className='relative'>
                                 <p className='absolute top-0 right-0 p-2'>
-                                    <X onClick={() => handleDelete(snippet.id)} className='cursor-pointer' />
+                                    {
+                                        snippet.id && <X onClick={() => handleDelete(snippet.id as string)}
+                                            className='cursor-pointer'
+                                        />
+                                    }
                                 </p>
                             </div>
                             <CardHeader>
@@ -153,9 +171,11 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
                                     </div>
                                 )}
                             </CardContent>
-                            {/* <CardFooter>
+                            <CardFooter>
                                 <p>Card Footer</p>
-                            </CardFooter> */}
+                                {/* <button onClick={comment}>make comment</button> */}
+                                <button onClick={comment}>upvote</button>
+                            </CardFooter>
                         </Card>
                     </li>
                 ))}

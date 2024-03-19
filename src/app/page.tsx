@@ -6,14 +6,6 @@ import Link from "next/link";
 import axios from 'axios';
 
 export default function Home() {
-  const comment = async () => {
-    const { data } = await axios.post('/api/comment', {
-      text: 'hello',
-      tags: ['TypeScript']
-    })
-
-    console.log(data)
-  }
 
   return (
     <div className="mx-auto px-4 py-8">
@@ -26,9 +18,6 @@ export default function Home() {
       <div className="gap-4 m-60 mt-4">
         <Form />
       </div>
-
-      {/* <button onClick={comment}>make comment</button> */}
-      <button onClick={comment}>upvote</button>
     </div>
   );
 }

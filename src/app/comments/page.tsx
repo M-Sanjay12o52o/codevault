@@ -1,8 +1,10 @@
 import { redis } from "@/lib/redis"
+import { nanoid } from "nanoid"
 import Link from "next/link"
 
 const Page = async () => {
     const commentIds = await redis.lrange('comments', 0, 3)
+    const id = nanoid();
 
     console.log("commentIds: ", commentIds)
 
@@ -23,7 +25,7 @@ const Page = async () => {
         <div className="flex flex-col gap-8">
             <Link href={'/'}>Home page</Link>
             {comments.map((comment, index) => (
-                <div key={index + 1} className="flex flex-col gap-2">
+                <div key={id} className="flex flex-col gap-2">
                     <h1>{comment.details.author}</h1>
                     <p className="text-white">{comment.details.text}</p>
                 </div>

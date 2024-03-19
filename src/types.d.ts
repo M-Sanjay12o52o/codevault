@@ -1,5 +1,5 @@
 interface CodeSnippet {
-    id: string;
+    id?: string;
     username: string;
     title: string;
     description: string;

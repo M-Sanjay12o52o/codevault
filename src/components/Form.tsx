@@ -1,5 +1,6 @@
 "use client"
 
+import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
@@ -23,6 +24,8 @@ const Form: React.FC = () => {
         stdin: '',
         sourceCode: '',
     });
+
+    const id = nanoid();
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
@@ -91,8 +94,8 @@ const Form: React.FC = () => {
                                 className="text-black font-medium w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
                             >
                                 <option value="">-- Select Language --</option>
-                                {codeLanguageOptions.map((language) => (
-                                    <option key={language} value={language}>
+                                {codeLanguageOptions.map((language, index) => (
+                                    <option key={id} value={language}>
                                         {language}
                                     </option>
                                 ))}

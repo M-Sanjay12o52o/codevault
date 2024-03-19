@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { redis } from '@/lib/redis';
 
 export async function DELETE(req: Request, res: Response) {
     const { snippetId } = (await req.json());
@@ -11,6 +12,9 @@ export async function DELETE(req: Request, res: Response) {
         const response = await db.codeSnippet.delete({
             where: { id: snippetId }
         })
+
+        // Delete from Redis cache
+        await redis.del(`snippet:${snippetId}`);
 
         return NextResponse.json({
             message: 'Snippet deleted successfully',
