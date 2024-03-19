@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
 const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
-    const [token, setToken] = useState("")
+    const [token, setToken] = useState("one")
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [result, setResult] = useState<string>("bla bli blu")
@@ -59,21 +59,42 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
             setError(error.message)
         } finally {
             setIsLoading(false);
-            // try {
-            //     const response = await fetch('api/getresult');
-            //     if (!response.ok) {
-            //         throw new Error(`Failed to fetch snippets: ${response.statusText}`);
-            //     }
-            //     const data = await response.json();
-            //     setResult(data.stdout);
-            // } catch (error: any) {
-            //     console.error('Error fetching snippets:', error);
-            //     setError(error);
-            // } finally {
-            //     setIsLoading(false);
-            // }
+            try {
+                const response = await fetch('api/getresult', {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch snippets: ${response.statusText}`);
+                }
+                const data = await response.json();
+                setResult(data.stdout);
+            } catch (error: any) {
+                console.error('Error fetching snippets:', error);
+                setError(error);
+            } finally {
+                setIsLoading(false);
+            }
         }
 
+    }
+
+    const getResultTest = async () => {
+        try {
+            const response = await axios.get(`api/getresult?token=${token}`);
+            if (!response.data) {
+                throw new Error(`Failed to fetch snippets: ${response.statusText}`);
+            }
+            const data = await response.data();
+            setResult(data.stdout);
+        } catch (error: any) {
+            console.error('Error fetching snippets:', error);
+            setError(error.message);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     const comment = async () => {
@@ -163,6 +184,12 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
                                 >
                                     Run
                                 </button>
+                                <button
+                                    onClick={() => getResultTest()}
+                                    className='run-button bg-blue-500 text-white px-4 py-2 rounded-md mt-2'
+                                >
+                                    getResult
+                                </button>
                                 {result && (
                                     <div>
                                         <p className="bg-gray-200 text-gray-800 py-2 px-4 rounded-md mt-2">
@@ -171,7 +198,7 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
                                     </div>
                                 )}
                             </CardContent>
-                            <CardFooter>
+                            <CardFooter className='flex flex-col flex-initial'>
                                 <p>Card Footer</p>
                                 {/* <button onClick={comment}>make comment</button> */}
                                 <button onClick={comment}>upvote</button>

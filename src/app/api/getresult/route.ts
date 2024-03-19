@@ -1,9 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-const axios = require('axios');
+import axios from 'axios';
 
-export async function GET(req: Request, res: Response) {
-    const token = 1;
+export async function GET(req: NextRequest, res: NextResponse,) {
+    const token = req.nextUrl.searchParams.get('token');
+
+    console.log("token: ", token)
+
+    if (!token) {
+        // Handle missing token error
+        return new NextResponse(
+            JSON.stringify({
+                status: "error",
+                message: "Missing token",
+            }),
+            { status: 401 }
+        );
+    }
 
     try {
         const options = {
