@@ -29,11 +29,11 @@ export async function POST(req: Request, res: Response) {
             headers: {
                 'content-type': 'application/json',
                 'Content-Type': 'application/json',
-                'X-RapidAPI-Key': '19d70677acmsh33c55bf1103890dp107b17jsndfe8f69f61f5',
+                'X-RapidAPI-Key': process.env.JUDGE_O_API,
                 'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
             },
             data: {
-                language_id: 52,
+                language_id: 63,
                 source_code: encodedSourceCode,
                 stdin: encodedStdin
             }
@@ -41,13 +41,10 @@ export async function POST(req: Request, res: Response) {
 
         try {
             const response = await axios.request(options);
-            console.log(response.data);
+            const responseData = response.data;
+            console.log("response.data: ", responseData);
 
-            return new NextResponse(
-                JSON.stringify({
-                    response
-                })
-            )
+            return new NextResponse(responseData)
         } catch (error: any) {
             console.error('Error submitting snippet:', error);
             return new NextResponse(

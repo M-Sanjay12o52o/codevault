@@ -1,15 +1,19 @@
+import Form from "@/components/Form";
 import Image from "next/image";
-import Form from "./components/Form";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <div>
-      <h1>Welcome Home</h1>
-      <Form />
-      <br />
-      <br />
-      <Link href={"/submitted"}>View Submitted</Link>
+    <div className="mx-auto px-4 py-8">
+      <header className="flex justify-center items-center mb-6">
+        <h1 className="text-3xl font-bold text-center text-blue-500">Code Vault</h1>
+      </header>
+      <Link href={"/submitted"} className="flex justify-center items-center mb-8">
+        <p className="underline font-medium text-xl">View Submitted</p>
+      </Link>
+      <div className="gap-4">
+        <Form />
+      </div>
     </div>
   );
 }

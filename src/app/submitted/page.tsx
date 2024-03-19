@@ -1,7 +1,7 @@
 "use client"
 
+import SnippetList from '@/components/SnippetList';
 import { FC, useEffect, useState } from 'react'
-import SnippetList from '../components/SnippetList';
 
 const page: FC<CodeSnippet> = ({ }) => {
     const [submittedSnippets, setSubmittedSnippets] = useState<CodeSnippet[]>([]);
