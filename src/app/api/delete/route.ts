@@ -1,17 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { redis } from '@/lib/redis';
 
-export async function GET(req: Request, res: Response) {
+export async function DELETE(req: Request, res: Response) {
+    const { snippetId } = (await req.json());
+
+    console.log("snippetId: ", snippetId)
+
     try {
-        const snippets = await db.codeSnippet.findMany();
 
-        console.log("snippets backend: ", snippets)
+        const response = await db.codeSnippet.delete({
+            where: { id: snippetId }
+        })
 
-        const successMessage = 'Code snippets fetched successfully!';
         return NextResponse.json({
-            snippets,
-            message: successMessage
+            message: 'Snippet deleted successfully',
+            response
         });
     } catch (error: any) {
         console.error('Error submitting snippet:', error);

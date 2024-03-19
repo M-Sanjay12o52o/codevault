@@ -4,8 +4,9 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 interface FormData {
-    id: number;
     username: string;
+    title: string;
+    description: string;
     codeLanguage: string;
     stdin: string;
     sourceCode: string;
@@ -15,8 +16,9 @@ const Form: React.FC = () => {
     const [submittedSnippets, setSubmittedSnippets] = useState<CodeSnippet[]>([]);
     const router = useRouter();
     const [formData, setFormData] = useState<FormData>({
-        id: 0,
         username: '',
+        title: "",
+        description: "",
         codeLanguage: '',
         stdin: '',
         sourceCode: '',
@@ -45,7 +47,7 @@ const Form: React.FC = () => {
             const newSnippet = { ...formData };
             setSubmittedSnippets([...submittedSnippets, newSnippet])
 
-            setFormData({ id: 0, username: '', codeLanguage: '', stdin: '', sourceCode: '' });
+            setFormData({ username: '', title: "", description: "", codeLanguage: '', stdin: '', sourceCode: '' });
 
             router.push("/submitted")
         } catch (error) {
@@ -98,6 +100,38 @@ const Form: React.FC = () => {
                         </div>
                     </div>
                 </fieldset>
+                <fieldset className="border rounded-lg p-4">
+                    <legend className="font-semibold text-lg">Title & Description</legend>
+                    <div className="grid grid-cols-1 gap-4">
+                        <div className="flex items-center">
+                            <label htmlFor="title" className="w-1/3 text-sm font-medium mr-2">
+                                Title:
+                            </label>
+                            <input
+                                id="title"
+                                name="title"
+                                value={formData.title}
+                                onChange={handleChange}
+                                placeholder="Enter title (optional)"
+                                className="text-black font-medium w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
+                        </div>
+                        <div className="flex items-center">
+                            <label htmlFor="description" className="w-1/3 text-sm font-medium mr-2">
+                                Description:
+                            </label>
+                            <input
+                                id="description"
+                                name="description"
+                                value={formData.description}
+                                onChange={handleChange}
+                                required
+                                placeholder="Enter description (optional)"
+                                className="text-black font-medium w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
+                        </div>
+                    </div>
+                </fieldset>
                 <fieldset className="border rounded-lg p-4 mt-4">
                     <legend className="font-semibold text-lg">Code Input</legend>
                     <div className="grid grid-cols-1 gap-4">
@@ -133,8 +167,10 @@ const Form: React.FC = () => {
                     </div>
                 </fieldset>
                 <div className="flex justify-end mt-4">
-                    <button type="submit" className="px-4 py-2 rounded-md bg-blue-500 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        Submit
+                    <button
+                        type="submit"
+                        className="px-4 py-2 rounded-md bg-blue-500 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Create
                     </button>
                 </div>
             </form>

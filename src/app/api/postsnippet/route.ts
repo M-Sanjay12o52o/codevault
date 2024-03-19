@@ -1,18 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { redis } from '@/lib/redis';
 
 export async function POST(req: Request, res: Response) {
     try {
-        const { username, codeLanguage, stdin, sourceCode } = (await req.json() as CodeSnippet);
+        const { username, title, description, codeLanguage, stdin, sourceCode } = (await req.json() as CodeSnippet);
 
         const snippet = await db.codeSnippet.create({
             data: {
                 username,
+                title,
+                description,
                 codeLanguage,
                 stdin,
                 sourceCode,
             },
         });
+
+        console.log("snippet: ", snippet)
 
         const successMessage = 'Code snippet submitted successfully!';
         return NextResponse.json({
