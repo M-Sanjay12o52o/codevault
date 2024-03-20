@@ -14,12 +14,15 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
     const router = useRouter();
     const [message, setMessage] = useState<string>("")
 
+    console.log("result: ", result)
+
     const handleRun = async (snippet: CodeSnippet) => {
         try {
             const response = await fetch("/api/postcode", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    language: snippet.codeLanguage,
                     sourceCode: snippet.sourceCode,
                     stdin: snippet.stdin
                 })

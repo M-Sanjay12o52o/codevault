@@ -4,7 +4,31 @@ const axios = require('axios');
 const { Buffer } = require('buffer');
 
 export async function POST(req: Request, res: Response) {
-    const { sourceCode, stdin } = (await req.json());
+    const { language, sourceCode, stdin } = (await req.json());
+
+    let languageId: number = 0;
+
+    if (language === "JavaScript") {
+        languageId = 93
+    } else if (language === "C++") {
+        languageId = 76
+    } else if (language === "Java") {
+        languageId = 91
+    } else if (language === "Python") {
+        languageId = 92
+    }
+
+    console.log("languageId: ", languageId)
+
+    if (!languageId) {
+        return new NextResponse(
+            JSON.stringify({
+                status: "error",
+                message: "Unsupported language"
+            }),
+            { status: 400 }
+        );
+    }
 
     try {
         const sanitizedReq = {
@@ -29,7 +53,7 @@ export async function POST(req: Request, res: Response) {
                 'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
             },
             data: {
-                language_id: 63,
+                language_id: languageId,
                 source_code: encodedSourceCode,
                 stdin: encodedStdin
             }
