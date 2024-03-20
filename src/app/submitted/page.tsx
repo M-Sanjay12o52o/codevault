@@ -9,29 +9,28 @@ const SNIPPET_EXPIRY_TIME = 60 * 60;
 
 const page: FC<CodeSnippet> = ({ }) => {
     const [submittedSnippets, setSubmittedSnippets] = useState<CodeSnippet[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-
-    console.log("submittedSnippets: ", submittedSnippets)
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchSnippets = async () => {
             setIsLoading(true);
             setError(null);
 
-            const cachedSnippets = await redis.get(CACHED_SNIPPETS_KEY);
+            // TODO: need to correct the logic of cache and db fetch
+            // const cachedSnippets = await redis.get(CACHED_SNIPPETS_KEY);
+            let cachedSnippets: unknown;
             const cachedSnippetsString = cachedSnippets as CodeSnippet[];
 
             if (cachedSnippets && cachedSnippetsString.length > 0) {
 
-                console.log("cached snippets")
                 setSubmittedSnippets(cachedSnippetsString)
                 setIsLoading(false);
                 return;
             } else {
-                console.log("hello from else")
                 try {
-                    const response = await fetch('api/getsnippets');
+                    // const response = await fetch('api/getsnippets');
+                    const response = await fetch("http://localhost:3001/judgeo");
                     if (!response.ok) {
                         throw new Error(`Failed to fetch snippets: ${response.statusText}`);
                     }

@@ -6,9 +6,6 @@ const { Buffer } = require('buffer');
 export async function POST(req: Request, res: Response) {
     const { sourceCode, stdin } = (await req.json());
 
-    console.log("sourceCode postcode: ", sourceCode)
-    console.log("stdin: ", stdin)
-
     try {
         const sanitizedReq = {
             sourceCode,
@@ -17,8 +14,6 @@ export async function POST(req: Request, res: Response) {
 
         const encodedSourceCode = Buffer.from(sanitizedReq.sourceCode).toString('base64');
         const encodedStdin = Buffer.from(sanitizedReq.stdin).toString('base64');
-
-        console.log("encodedSourceCode :", encodedSourceCode, "encodedStdin: ", encodedStdin)
 
         const options = {
             method: 'POST',
@@ -42,10 +37,13 @@ export async function POST(req: Request, res: Response) {
 
         try {
             const response = await axios.request(options);
-            const responseData = response.data;
-            console.log("response.data: ", responseData);
 
-            return new NextResponse(responseData)
+            console.log("response: ", response)
+            const responseData = response.data;
+            console.log("responseData: ", responseData)
+            const responseDataString = JSON.stringify(responseData)
+
+            return new NextResponse(responseDataString)
         } catch (error: any) {
             console.error('Error submitting snippet:', error);
             return new NextResponse(

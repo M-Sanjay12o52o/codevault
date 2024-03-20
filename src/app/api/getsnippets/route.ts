@@ -6,8 +6,6 @@ export async function GET(req: Request, res: Response) {
     try {
         const snippets = await db.codeSnippet.findMany();
 
-        console.log("snippets backend: ", snippets)
-
         const successMessage = 'Code snippets fetched successfully!';
         return NextResponse.json({
             snippets,

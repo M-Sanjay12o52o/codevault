@@ -36,7 +36,8 @@ const Form: React.FC = () => {
         event.preventDefault();
 
         try {
-            const response = await fetch("/api/postsnippet", {
+            // const response = await fetch("/api/postsnippet", {
+            const response = await fetch("http://localhost:3001/judgeo", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
@@ -46,7 +47,6 @@ const Form: React.FC = () => {
                 throw new Error('Failed to submit snippet');
             }
 
-            console.log('Form submitted:', formData);
             const newSnippet = { ...formData };
             setSubmittedSnippets([...submittedSnippets, newSnippet])
 
@@ -95,7 +95,7 @@ const Form: React.FC = () => {
                             >
                                 <option value="">-- Select Language --</option>
                                 {codeLanguageOptions.map((language, index) => (
-                                    <option key={id} value={language}>
+                                    <option key={index} value={language}>
                                         {language}
                                     </option>
                                 ))}

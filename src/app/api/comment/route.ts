@@ -8,8 +8,6 @@ export const POST = async (req: NextRequest) => {
 
         const { text, tags } = body
 
-        console.log("text: ", text, "tags: ", tags)
-
         const commentId = nanoid();
 
         // retrieve and store comment details

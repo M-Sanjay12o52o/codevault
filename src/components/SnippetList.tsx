@@ -7,25 +7,17 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
 const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
-    const [token, setToken] = useState("one")
+    const [token, setToken] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [result, setResult] = useState<string>("bla bli blu")
     const router = useRouter();
     const [message, setMessage] = useState<string>("")
 
-    console.log("snippets list: ", snippets)
-
-
-    console.log("token: ", token);
-    console.log("result: ", result)
+    console.log("token frontend: ", token)
 
     const handleRun = async (snippet: CodeSnippet) => {
-        console.log("hello from handlerun")
-
         try {
-            console.log("hello one")
-
             const response = await fetch("/api/postcode", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -35,66 +27,49 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
                 })
             })
 
-            console.log("hello two")
-
             if (!response.ok) {
-                console.log("hello !response.ok")
-
                 throw new Error('Failed to fetch post status');
             }
 
+            console.log("hello")
+
             const data = await response.json();
 
-            console.log("data frontend: ", data)
+            console.log("data: ", data)
 
-            if (data && data.token) {
-                setToken(data.token);
+            if (data) {
+                // const tokenString = typeof data.token === 'string' ? data.token : JSON.stringify(data.token);
+                // setToken(tokenString);
+                setToken(data)
             } else {
                 throw new Error('Invalid response format: missing token');
             }
 
-            setToken(data)
         } catch (error: any) {
             console.error('Error submitting snippet:', error);
-            setError(error.message)
+            setError(error)
         } finally {
             setIsLoading(false);
-            try {
-                const response = await fetch('api/getresult', {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch snippets: ${response.statusText}`);
-                }
-                const data = await response.json();
-                setResult(data.stdout);
-            } catch (error: any) {
-                console.error('Error fetching snippets:', error);
-                setError(error);
-            } finally {
-                setIsLoading(false);
-            }
+            // try {
+            //     const response = await fetch('api/getresult', {
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //             'Authorization': `Bearer ${token}`
+            //         }
+            //     });
+            //     if (!response.ok) {
+            //         throw new Error(`Failed to fetch snippets: ${response.statusText}`);
+            //     }
+            //     const data = await response.json();
+            //     setResult(data.stdout);
+            // } catch (error: any) {
+            //     console.error('Error fetching snippets:', error);
+            //     setError(error);
+            // } finally {
+            //     setIsLoading(false);
+            // }
         }
 
-    }
-
-    const getResultTest = async () => {
-        try {
-            const response = await axios.get(`api/getresult?token=${token}`);
-            if (!response.data) {
-                throw new Error(`Failed to fetch snippets: ${response.statusText}`);
-            }
-            const data = await response.data();
-            setResult(data.stdout);
-        } catch (error: any) {
-            console.error('Error fetching snippets:', error);
-            setError(error.message);
-        } finally {
-            setIsLoading(false);
-        }
     }
 
     const comment = async () => {
@@ -102,10 +77,7 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
             text: 'hello',
             tags: ['TypeScript']
         })
-
-        console.log(data)
     }
-
 
     const handleDelete = async (id: string) => {
         try {
@@ -121,8 +93,6 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
             }
 
             setMessage("Code snippet deleted successfully")
-
-            console.log('Code snippet deleted successfully');
         } catch (error) {
             console.error('Error deleting code snippet:', error);
         } finally {
@@ -134,7 +104,7 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
     return (
         <div className='mt-4'>
             <ArrowLeft className='m-4 cursor-pointer' onClick={() => router.push("/")} />
-            {token && <p>{token}</p>}
+            {token && <p>token: {token}</p>}
             <header className="flex justify-center items-center mb-6">
                 <h1 className="text-3xl font-bold text-center text-blue-500">Submitted</h1>
             </header>
@@ -183,12 +153,6 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
                                     className='run-button bg-blue-500 text-white px-4 py-2 rounded-md mt-2'
                                 >
                                     Run
-                                </button>
-                                <button
-                                    onClick={() => getResultTest()}
-                                    className='run-button bg-blue-500 text-white px-4 py-2 rounded-md mt-2'
-                                >
-                                    getResult
                                 </button>
                                 {result && (
                                     <div>

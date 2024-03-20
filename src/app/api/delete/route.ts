@@ -5,8 +5,6 @@ import { redis } from '@/lib/redis';
 export async function DELETE(req: Request, res: Response) {
     const { snippetId } = (await req.json());
 
-    console.log("snippetId: ", snippetId)
-
     try {
 
         const response = await db.codeSnippet.delete({

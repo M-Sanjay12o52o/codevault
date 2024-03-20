@@ -17,8 +17,6 @@ export async function POST(req: Request, res: Response) {
             },
         });
 
-        console.log("snippet: ", snippet)
-
         const successMessage = 'Code snippet submitted successfully!';
         return NextResponse.json({
             snippet,

@@ -5,7 +5,7 @@ import axios from 'axios';
 export async function GET(req: NextRequest, res: NextResponse,) {
     const token = req.nextUrl.searchParams.get('token');
 
-    console.log("token: ", token)
+    console.log("token backend: ", token)
 
     if (!token) {
         // Handle missing token error
@@ -35,7 +35,6 @@ export async function GET(req: NextRequest, res: NextResponse,) {
         try {
             const response = await axios.request(options);
             const responseData = response.data;
-            console.log("response.data: ", responseData);
 
             return new NextResponse(responseData)
         } catch (error) {
