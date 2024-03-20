@@ -37,10 +37,7 @@ export async function POST(req: Request, res: Response) {
 
         try {
             const response = await axios.request(options);
-
-            console.log("response: ", response)
             const responseData = response.data;
-            console.log("responseData: ", responseData)
             const responseDataString = JSON.stringify(responseData)
 
             return new NextResponse(responseDataString)

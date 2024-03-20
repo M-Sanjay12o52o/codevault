@@ -14,8 +14,6 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
     const router = useRouter();
     const [message, setMessage] = useState<string>("")
 
-    console.log("token frontend: ", token)
-
     const handleRun = async (snippet: CodeSnippet) => {
         try {
             const response = await fetch("/api/postcode", {
@@ -31,16 +29,11 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
                 throw new Error('Failed to fetch post status');
             }
 
-            console.log("hello")
-
             const data = await response.json();
 
-            console.log("data: ", data)
-
             if (data) {
-                // const tokenString = typeof data.token === 'string' ? data.token : JSON.stringify(data.token);
-                // setToken(tokenString);
-                setToken(data)
+                setToken(data.token)
+                fetchResult(data.token)
             } else {
                 throw new Error('Invalid response format: missing token');
             }
@@ -48,28 +41,31 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
         } catch (error: any) {
             console.error('Error submitting snippet:', error);
             setError(error)
-        } finally {
-            setIsLoading(false);
-            // try {
-            //     const response = await fetch('api/getresult', {
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //             'Authorization': `Bearer ${token}`
-            //         }
-            //     });
-            //     if (!response.ok) {
-            //         throw new Error(`Failed to fetch snippets: ${response.statusText}`);
-            //     }
-            //     const data = await response.json();
-            //     setResult(data.stdout);
-            // } catch (error: any) {
-            //     console.error('Error fetching snippets:', error);
-            //     setError(error);
-            // } finally {
-            //     setIsLoading(false);
-            // }
         }
 
+    }
+
+    const fetchResult = async (token: string) => {
+        try {
+            const response = await fetch(`api/getresult?token=${token}`);
+
+            console.log("fetchResult response: ", response)
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch snippets: ${response.statusText}`);
+            }
+            const data = await response.json();
+            console.log("result data: ", data)
+            var base64Data = data.stdout;
+            var textData = atob(base64Data);
+
+            setResult(textData);
+        } catch (error: any) {
+            console.error('Error fetching snippets:', error);
+            setError(error);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     const comment = async () => {

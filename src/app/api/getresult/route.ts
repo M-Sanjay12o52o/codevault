@@ -35,8 +35,9 @@ export async function GET(req: NextRequest, res: NextResponse,) {
         try {
             const response = await axios.request(options);
             const responseData = response.data;
+            const responseDataString = JSON.stringify(responseData)
 
-            return new NextResponse(responseData)
+            return new NextResponse(responseDataString)
         } catch (error) {
             console.error(error);
         }
