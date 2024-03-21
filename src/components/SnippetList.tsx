@@ -101,7 +101,7 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
     };
 
     return (
-        <div className='mt-4'>
+        <div className='container mx-auto max-w-screen-md px-4'>
             <ArrowLeft className='m-4 cursor-pointer' onClick={() => router.push("/")} />
             {token && <p>token: {token}</p>}
             <header className="flex justify-center items-center mb-6">
@@ -112,16 +112,13 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
                     No snippets found
                 </h1>}
                 {snippets.length !== 0 && snippets.map((snippet) => (
-                    <li key={snippet.id}>
-                        <Card className='mx-96 my-8'>
+                    <li key={snippet.id} className='mb-8'>
+                        <Card className='mx-auto max-w-md p-4 rounded-lg shadow-md'>
                             <p>{snippet.id}</p>
-                            <div className='relative'>
-                                <p className='absolute top-0 right-0 p-2'>
-                                    {
-                                        snippet.id && <X onClick={() => handleDelete(snippet.id as string)}
-                                            className='cursor-pointer'
-                                        />
-                                    }
+                            <div className='flex items-start justify-end'>
+                                <p className='cursor-pointer'>  {
+                                    snippet.id && <X onClick={() => handleDelete(snippet.id as string)} />
+                                }
                                 </p>
                             </div>
                             <CardHeader>
@@ -129,6 +126,7 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
                                     <div>
                                         <CardTitle>{snippet.title}</CardTitle>
                                         <CardDescription>Description: {snippet.description}</CardDescription>
+                                        <p className='font-thin'>Lang: {snippet.codeLanguage}</p>
                                     </div>
                                 ) : (
                                     <div>
@@ -137,8 +135,8 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
                                     </div>
                                 )}
                             </CardHeader>
-                            <CardContent>
-                                <pre className='code text-black bg-slate-200 p-4 rounded-lg'>
+                            <CardContent className='overflow-hidden'>
+                                <pre className='code text-black bg-slate-200 p-4 rounded-lg whitespace-pre-wrap'>
                                     {snippet.sourceCode}
                                 </pre>
                                 {snippet.stdin && (
@@ -161,7 +159,7 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
                                     </div>
                                 )}
                             </CardContent>
-                            <CardFooter className='flex flex-col flex-initial'>
+                            <CardFooter className='flex items-center justify-between'>
                                 <p>Card Footer</p>
                                 {/* <button onClick={comment}>make comment</button> */}
                                 <button onClick={comment}>upvote</button>

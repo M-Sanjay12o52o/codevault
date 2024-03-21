@@ -15,8 +15,10 @@ export default function Home() {
       <Link href={"/submitted"} className="flex justify-center items-center mb-8">
         <p className="underline font-medium text-xl">View Submitted</p>
       </Link>
-      <div className="gap-4 m-60 mt-4">
-        <Form />
+      <div className="container mx-auto max-w-3xl px-4">
+        <div className="gap-4 mt-4">
+          <Form />
+        </div>
       </div>
     </div>
   );
