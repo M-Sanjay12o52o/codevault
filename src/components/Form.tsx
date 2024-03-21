@@ -13,6 +13,10 @@ interface FormData {
     sourceCode: string;
 }
 
+const isProduction = process.env.NODE_ENV === 'production'
+
+const serverUrl = isProduction ? process.env.NEXT_PUBLIC_SERVER_URL : 'http://localhost:3001';
+
 const Form: React.FC = () => {
     const [submittedSnippets, setSubmittedSnippets] = useState<CodeSnippet[]>([]);
     const router = useRouter();
@@ -38,7 +42,7 @@ const Form: React.FC = () => {
         try {
             // const response = await fetch("/api/postsnippet", {
             // const response = await fetch("http://localhost:3001/judgeo", {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/judgeo`, {
+            const response = await fetch(`${serverUrl}/judgeo`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)

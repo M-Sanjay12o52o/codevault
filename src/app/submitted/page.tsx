@@ -7,6 +7,10 @@ import { FC, useEffect, useState } from 'react'
 const CACHED_SNIPPETS_KEY = 'cachedSnippets';
 const SNIPPET_EXPIRY_TIME = 60 * 60;
 
+const isProduction = process.env.NODE_ENV === 'production'
+
+const serverUrl = isProduction ? process.env.NEXT_PUBLIC_SERVER_URL : 'http://localhost:3001';
+
 export default function SubmittedPage() {
     const [submittedSnippets, setSubmittedSnippets] = useState<CodeSnippet[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -31,7 +35,7 @@ export default function SubmittedPage() {
                 try {
                     // const response = await fetch('api/getsnippets');
                     // const response = await fetch("http://localhost:3001/judgeo");
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/judgeo`);
+                    const response = await fetch(`${serverUrl}/judgeo`);
 
                     if (!response.ok) {
                         throw new Error(`Failed to fetch snippets: ${response.statusText}`);

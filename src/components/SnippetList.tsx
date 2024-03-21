@@ -7,6 +7,10 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 require('dotenv').config();
 
+const isProduction = process.env.NODE_ENV === 'production'
+
+const serverUrl = isProduction ? process.env.NEXT_PUBLIC_SERVER_URL : 'http://localhost:3001';
+
 const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
     const [token, setToken] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(false);
@@ -15,11 +19,13 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
     const router = useRouter();
     const [message, setMessage] = useState<string>("")
 
+    console.log("token: ", token)
+
     const handleRun = async (snippet: CodeSnippet) => {
         try {
             // const response = await fetch("/api/postcode", {
             // const response = await fetch("http://localhost:3001/result", {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/result`, {
+            const response = await fetch(`${serverUrl}/result`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -55,7 +61,7 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
 
             // const response = await fetch(`http://localhost:3001/result?token=${token}`)
 
-            const response = await fetch(`${process.env.SERVER_URL}/result?token=${token}`)
+            const response = await fetch(`${serverUrl}/result?token=${token}`)
 
             console.log("fetchResult response: ", response)
 
@@ -63,8 +69,12 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
                 throw new Error(`Failed to fetch snippets: ${response.statusText}`);
             }
             const data = await response.json();
-            console.log("result data: ", data)
+
+            console.log("typeof data: ", data)
+            console.log("data: ", data)
+
             var base64Data = data.stdout;
+
             var textData = atob(base64Data);
 
             setResult(textData);
