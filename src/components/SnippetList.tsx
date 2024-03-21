@@ -19,7 +19,8 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
     const handleRun = async (snippet: CodeSnippet) => {
         try {
             // const response = await fetch("/api/postcode", {
-            const response = await fetch("http://localhost:3001/result", {
+            // const response = await fetch("http://localhost:3001/result", {
+            const response = await fetch(`${process.env.SERVER_URL}/result`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -53,7 +54,9 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
         try {
             // const response = await fetch(`api/getresult?token=${token}`);
 
-            const response = await fetch(`http://localhost:3001/result?token=${token}`)
+            // const response = await fetch(`http://localhost:3001/result?token=${token}`)
+
+            const response = await fetch(`${process.env.SERVER_URL}/result?token=${token}`)
 
             console.log("fetchResult response: ", response)
 
