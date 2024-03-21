@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ArrowLeft, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+require('dotenv').config();
 
 const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
     const [token, setToken] = useState<string | null>(null)
@@ -14,13 +15,11 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
     const router = useRouter();
     const [message, setMessage] = useState<string>("")
 
-    console.log("result: ", result)
-
     const handleRun = async (snippet: CodeSnippet) => {
         try {
             // const response = await fetch("/api/postcode", {
             // const response = await fetch("http://localhost:3001/result", {
-            const response = await fetch(`${process.env.SERVER_URL}/result`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/result`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

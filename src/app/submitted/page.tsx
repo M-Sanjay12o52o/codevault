@@ -31,7 +31,7 @@ export default function SubmittedPage() {
                 try {
                     // const response = await fetch('api/getsnippets');
                     // const response = await fetch("http://localhost:3001/judgeo");
-                    const response = await fetch(`${process.env.SERVER_URL}/judgeo`);
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/judgeo`);
 
                     if (!response.ok) {
                         throw new Error(`Failed to fetch snippets: ${response.statusText}`);
