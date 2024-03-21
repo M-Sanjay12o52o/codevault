@@ -7,7 +7,7 @@ import { FC, useEffect, useState } from 'react'
 const CACHED_SNIPPETS_KEY = 'cachedSnippets';
 const SNIPPET_EXPIRY_TIME = 60 * 60;
 
-const page: FC<CodeSnippet> = ({ }) => {
+export default function SubmittedPage() {
     const [submittedSnippets, setSubmittedSnippets] = useState<CodeSnippet[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -51,12 +51,13 @@ const page: FC<CodeSnippet> = ({ }) => {
         fetchSnippets();
     }, []);
 
-    return <div>
-        {isLoading && <p>Loading snippets...</p>}
-        {error && <p className="error-message">{error}</p>}
-        {!isLoading && <SnippetList snippets={submittedSnippets} />
-        }
-    </div>
+    return (
+        <div>
+            {isLoading && <p>Loading snippets...</p>}
+            {error && <p className="error-message">{error}</p>}
+            {!isLoading && <SnippetList snippets={submittedSnippets} />
+            }
+        </div>
+    )
 }
 
-export default page
