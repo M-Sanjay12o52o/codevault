@@ -18,11 +18,14 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
     const [result, setResult] = useState<string>("bla bli blu")
     const router = useRouter();
     const [message, setMessage] = useState<string>("")
+    const [results, setResults] = useState<{ [key: string]: string }>({});
 
     console.log("token: ", token)
 
     const handleRun = async (snippet: CodeSnippet) => {
         try {
+            setIsLoading(true)
+
             // const response = await fetch("/api/postcode", {
             // const response = await fetch("http://localhost:3001/result", {
             const response = await fetch(`${serverUrl}/result`, {
@@ -43,7 +46,7 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
 
             if (data) {
                 setToken(data.token)
-                fetchResult(data.token)
+                fetchResult(snippet.id, data.token)
             } else {
                 throw new Error('Invalid response format: missing token');
             }
@@ -51,11 +54,13 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
         } catch (error: any) {
             console.error('Error submitting snippet:', error);
             setError(error)
+        } finally {
+            setIsLoading(false);
         }
 
     }
 
-    const fetchResult = async (token: string) => {
+    const fetchResult = async (snippetId: string | undefined, token: string) => {
         try {
             // const response = await fetch(`api/getresult?token=${token}`);
 
@@ -78,6 +83,7 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
             var textData = atob(base64Data);
 
             setResult(textData);
+            setResults({ ...results, [snippetId!]: textData })
         } catch (error: any) {
             console.error('Error fetching snippets:', error);
             setError(error);
@@ -166,10 +172,10 @@ const SnippetList: FC<{ snippets: CodeSnippet[] }> = ({ snippets }) => {
                                 >
                                     Run
                                 </button>
-                                {result && (
+                                {results && (
                                     <div>
                                         <p className="bg-gray-200 text-gray-800 py-2 px-4 rounded-md mt-2">
-                                            Result: {result}
+                                            Result: {results.snippetId}
                                         </p>
                                     </div>
                                 )}
